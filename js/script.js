@@ -114,6 +114,8 @@ function getStartingPlayer() {
 function scoringGame (player) {
 	var currentPlayer = player;
 	getScore(currentPlayer);
+	getBonus(currentPlayer);
+	pickUpTiles(currentPlayer);
 	winRound(currentPlayer);
 	console.log("Round Over: " + roundOver);
 	if (roundOver) {
@@ -161,6 +163,49 @@ function getScore(player){
 	} 
 }
 
+function getBonus(player) {
+	getHex(player);
+}
+
+function getHex(player) {
+	var hex = confirm("Did " + playerName[player] + " make a Hexagon?");
+	if (hex) {
+		playerScore[player] += 50; 
+		console.log(playerName[player] + " got 50 points for making a Hex!");	
+	}
+	else {
+		getBridge(player);
+	}
+}
+
+function getBridge(player) {
+	var bridge = confirm("Did " + playerName[player] + " make a Bridge?");
+	if (bridge) {
+		playerScore[player] += 40;
+		console.log(playerName[player] + " got 40 points for making a Bridge!");
+	}
+	else {
+		// nothin'
+	}
+}
+
+function pickUpTiles(player) {
+	var tiles = prompt("How many tiles did " + playerName[player] + " pick up?");
+	// TODO did player pick up the last tile and unable to play? (if so -10 points)
+	if (tiles == null) {
+		// do nothing
+	}
+	else if (isNaN(parseInt(tiles))) {
+		pickUpTiles(player);
+	}
+	else if (tiles < 0 || tiles > 38) {
+		pickUpTiles(player);
+	}
+	else {
+		playerScore[player] -= parseInt(tiles) * 5;
+	}
+}
+
 
 function updateScore(player, score) {
 	console.log("updating score for player " + playerName[player]);
@@ -169,6 +214,7 @@ function updateScore(player, score) {
 
 function winRound (player) {
 	var win = confirm("Did " + playerName[player] + " win?");
+	// TODO - when do we "say" a game is blocked?
 	if (win) {
 		roundScore(player);
 		roundOver = true;
